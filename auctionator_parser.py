@@ -1,35 +1,38 @@
 import cfg
 import re
+from data import Data
 
 
 def regex(pattern, text):
     text = text.replace('\t', '').replace('\n', '')
-    regex = re.compile(pattern)
-    return regex.search(text)
+    reg = re.compile(pattern)
+    return reg.search(text)
 
 
-def to_dict(text: str):
-    splited = text.rstrip(',').split(',')
-    prices = dict()
-    for line in splited:
-        pattern = r'\[\"(?P<name>.*)\"\] = (?P<price>\d*)'
-        reg = regex(pattern, line)
-        name = reg.group('name')
-        price = reg.group('price')
-        prices[name] = int(price)
-    return prices
-
-
-def parse():
+def get_text_from_file():
     auctionator_log_path = f'{cfg.WOWPATH}\WTF\Account\{cfg.ACCOUNT_NAME.upper()}\SavedVariables\Auctionator.lua'
     server_faction = f'{cfg.SERVER_NAME}_{cfg.FACTION}'
     with open(auctionator_log_path, encoding="utf8") as fin:
         text = fin.read()
     pattern = fr'\[\"{server_faction}\"\] = \{{(?P<info>[^\}}]*)\}}'
     reg = regex(pattern, text)
-    info = reg.group('info')
-    return to_dict(info)
+    text = reg.group('info')
+    return text
 
 
-def only_glyphs(prices):
-    return {name: price for name, price in prices.items() if name.startswith('Символ')}
+def text_to_data(text: str):
+    splitted = text.rstrip(',').split(',')
+    data = Data()
+    for line in splitted:
+        pattern = r'\[\"(?P<name>.*)\"\] = (?P<price>\d*)'
+        reg = regex(pattern, line)
+        name = reg.group('name')
+        price = int(reg.group('price'))
+        data.add(name, price)
+    return data
+
+
+def parse():
+    text = get_text_from_file()
+    data = text_to_data(text)
+    return data

@@ -6,10 +6,10 @@ def convert_money(money):
     return gold, silver, copper
 
 
-def output_prices(prices):
-    """Create or rewrite 'output.txt' file with needed information"""
+def output_prices(data):
+    """Create or rewrite 'output.txt' file with the required information"""
     line_text = ''
-    for name, price in prices.items():
+    for name, price in data.records.items():
         gold, silver, copper = convert_money(price)
         line_text += f'{str(name)} | {str(gold)}.{str(silver)}.{str(copper)}\n'
 
@@ -17,9 +17,10 @@ def output_prices(prices):
         fout.write(line_text)
 
 
-def display_prices(prices):
-    """Print needed information in console"""
-    for name, price in prices.items():
+def display_prices(data):
+    """Print the required information to the console"""
+    line_text = ''
+    for name, price in data.records.items():
         gold, silver, copper = convert_money(price)
-        line_text = f'{str(name)} | {str(gold)}.{str(silver)}.{str(copper)}'
-        print(line_text)
+        line_text += f'{str(name)} | {str(gold)}.{str(silver)}.{str(copper)}\n'
+    print(line_text)

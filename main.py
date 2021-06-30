@@ -1,9 +1,6 @@
-import auctionator_parser as parser
-import sort
+from auctionator_parser import parse
 from output import display_prices, output_prices
 
-prices = parser.parse()
-glyphs = parser.only_glyphs(prices)
-sorted_prices = sort.sort_prices(glyphs)
+data = parse().startswith('Символ').sort().top(5)
 
-display_prices(sorted_prices)
+display_prices(data)
