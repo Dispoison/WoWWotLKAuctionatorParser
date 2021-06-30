@@ -1,4 +1,4 @@
-import wow_auctionator_parser as parser
+import auctionator_parser as parser
 import sort
 from output import display_prices, output_prices
 
